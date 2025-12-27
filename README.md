@@ -1,203 +1,85 @@
 # Instagram Audio Downloader
 
-A Chrome extension that allows you to download and save Instagram audio messages (voice notes) directly from your Instagram direct messages.
+Instagram Audio Downloader is an open-source Chrome extension for capturing, organizing, and downloading Instagram voice notes directly from the web client. Everything happens locally in your browser, giving you full transparency and control over the code you run.
 
-## 🎯 Features
+## Features
 
-- **One-click Downloads**: Download Instagram audio messages with a single click
-- **Clean Interface**: Seamlessly integrates with Instagram's UI
-- **Auto-detection**: Automatically detects audio messages and adds download buttons
-- **Multiple Formats**: Supports various audio formats (MP3, M4A, WAV, etc.)
-- **Download Management**: Track your downloads and view statistics
-- **Privacy-focused**: Works entirely in your browser, no data sent to external servers
+- Automatic detection of audio messages inside Instagram DMs and Messenger web conversations.
+- Popup interface that lists every detected clip in chronological order with live updates.
+- One-click download workflow with filenames formatted as `Instagram-audio-YYYY-MM-DD HH-MM-SS GMT±HHMM.mp4`.
+- Lightweight footprint: no tracking, no external servers, just client-side JavaScript.
 
-## 🚀 Installation
+## Why Open Source?
 
-### From Source (Developer Mode)
+- **Transparency**: Inspect how audio requests are intercepted and stored.
+- **Extensibility**: Fork the project to add integrations, port it to other browsers, or customize the UI.
+- **Collaboration**: Issues and pull requests are welcome; see the contributing section for guidelines.
 
-1. **Download the Extension**
-   - Clone or download this repository to your computer
-   - Extract the files to a folder (e.g., `instagram-audio-downloader`)
+## Quick Start
 
-2. **Enable Developer Mode in Chrome**
-   - Open Chrome and go to `chrome://extensions/`
-   - Turn on "Developer mode" using the toggle in the top-right corner
+### Prerequisites
 
-3. **Load the Extension**
-   - Click "Load unpacked" button
-   - Select the folder containing the extension files
-   - The extension should now appear in your extensions list
+- Chrome 114+ or any Chromium-based browser with extension developer mode.
 
-4. **Add Icons (Optional)**
-   - The extension uses placeholder icons by default
-   - You can add custom icons in PNG format to the `icons/` folder:
-     - `icon16.png` (16x16 pixels)
-     - `icon32.png` (32x32 pixels)
-     - `icon48.png` (48x48 pixels)
-     - `icon128.png` (128x128 pixels)
+### Install from Source
 
-## 📋 Usage
+1. Clone or download this repository.
+2. Open `chrome://extensions/` and enable Developer Mode.
+3. Click **Load unpacked** and select the project directory.
+4. (Optional) Replace the placeholder icons under `icons/` with your own PNG assets.
 
-1. **Open Instagram**
-   - Navigate to [Instagram](https://instagram.com)
-   - Go to your Direct Messages (DMs)
+## Using the Extension
 
-2. **Find Audio Messages**
-   - Open a conversation that contains voice notes/audio messages
-   - Look for the download button (📥) that appears next to audio messages
+1. Log in to Instagram web and open a DM thread that contains voice notes.
+2. Open the extension popup to monitor detected clips in real time.
+3. Click the download button inside the popup or right from Instagram (if integrated) to save the file.
+4. Downloads are stored in `Downloads/Instagram Audio/` with the human-readable timestamp naming pattern above.
 
-3. **Download Audio**
-   - Click the download button next to any audio message
-   - The audio file will be downloaded to your `Downloads/Instagram Audio/` folder
-   - Files are automatically named with timestamps for easy organization
+## Project Structure
 
-4. **Manage Extension**
-   - Click the extension icon in your browser toolbar to:
-     - Toggle the extension on/off
-     - View download statistics
-     - Access recent downloads
-     - Get usage instructions
-
-## ⚙️ Extension Controls
-
-### Popup Interface
-- **Status Toggle**: Enable/disable the extension
-- **Statistics**: View total and session download counts
-- **Recent Downloads**: See your latest downloaded files
-- **Quick Access**: Direct link to Instagram DMs
-
-### Right-click Menu
-- Right-click on any Instagram page to quickly toggle the extension
-
-## 🔧 Technical Details
-
-### File Structure
 ```
 insta-download/
-├── manifest.json          # Extension configuration
-├── content.js            # Main content script
-├── background.js         # Service worker for downloads
-├── injected.js          # Script for intercepting audio URLs
-├── popup.html           # Extension popup interface
-├── popup.js             # Popup functionality
-├── popup.css            # Popup styling
-├── styles.css           # Content script styling
-├── icons/               # Extension icons
-└── README.md            # This file
+├── background.js   // Service worker handling detection, storage, downloads
+├── content.js      // Lightweight relay that surfaces background messages to the page
+├── injected.js     // Page-level override that intercepts audio network requests
+├── manifest.json   // Chrome extension manifest (MV3)
+├── popup.css       // Popup styling
+├── popup.html      // Popup markup
+├── popup.js        // Popup logic and DOM rendering helpers
+└── README.md
 ```
 
-### How It Works
+## Development Guide
 
-1. **Content Script**: Monitors Instagram pages for audio message elements
-2. **URL Interception**: Captures audio file URLs using network request monitoring
-3. **Download Management**: Uses Chrome's downloads API to save files
-4. **UI Integration**: Adds download buttons that blend with Instagram's design
+- The codebase is pure JavaScript; no bundler is required.
+- Use Chrome DevTools on Instagram to watch console logs from the injected script and popup.
+- To reset detected audio, clear extension storage via the Extensions page.
+- When testing downloads, confirm the filename override fires in `chrome://downloads/`.
 
-### Supported Audio Formats
-- MP3 (MPEG Audio Layer 3)
-- M4A (MPEG-4 Audio)
-- WAV (Waveform Audio File Format)
-- AAC (Advanced Audio Coding)
-- OGG (Ogg Vorbis)
-- OPUS (Opus Codec)
+## Contributing
 
-## 🛡️ Privacy & Security
+Interested in helping out?
 
-- **Local Processing**: All processing happens locally in your browser
-- **No Data Collection**: Extension doesn't collect or transmit personal data
-- **Minimal Permissions**: Only requests necessary permissions for core functionality
-- **Secure Downloads**: Uses Chrome's built-in download security features
+1. Fork the repository and create a feature or fix branch.
+2. Keep changes focused and include context in commit messages.
+3. Manually test on Instagram web (DMs and audio downloads) before opening a pull request.
+4. Open a PR describing the motivation, approach, and testing notes.
 
-## 🔍 Permissions Explained
+Bug reports and feature requests are tracked via GitHub issues. Please attach console logs or reproduction steps when possible.
 
-The extension requires these permissions:
+## Roadmap
 
-- **activeTab**: Access the currently active Instagram tab
-- **downloads**: Download audio files to your computer
-- **storage**: Save extension settings and statistics
-- **host_permissions**: Access Instagram and related CDN domains for audio files
+- Optional batching for multiple downloads.
+- Alternate filename templates and localization support.
+- Firefox/Manifest V2 compatibility layer.
+- Automated regression tests for popup logic.
 
-## 🐛 Troubleshooting
+## Support & Etiquette
 
-### Download Button Not Appearing
-1. Refresh the Instagram page
-2. Check if extension is enabled in the popup
-3. Try opening a different conversation with audio messages
-4. Clear browser cache and reload
+- Check the issue tracker for known problems before filing a new one.
+- Respect Instagram's Terms of Service and the privacy of the people whose audio you download.
+- Remember that the maintainers volunteer their time; constructive feedback and reproducible reports help everyone.
 
-### Downloads Not Starting
-1. Check Chrome's download permissions
-2. Ensure sufficient disk space
-3. Try downloading a different audio message
-4. Restart the browser and try again
+## License
 
-### Audio Files Not Playing
-1. Check if your system supports the audio format
-2. Try playing in different audio software
-3. Some Instagram audio files may have specific encoding
-
-## 📝 Development
-
-### Building from Source
-1. Clone the repository
-2. No build process required - it's a pure JavaScript extension
-3. Load directly in Chrome using developer mode
-
-### Contributing
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly on Instagram
-5. Submit a pull request
-
-### Debugging
-- Open Chrome DevTools on Instagram pages
-- Check the Console tab for extension logs
-- Use `chrome://extensions/` to view extension errors
-
-## 📞 Support
-
-If you encounter issues:
-
-1. **Check Troubleshooting Section**: Most common issues are covered above
-2. **Update Chrome**: Ensure you're using a recent version of Chrome
-3. **Disable Conflicts**: Temporarily disable other Instagram-related extensions
-4. **Clear Data**: Clear browser cache and extension storage
-
-## ⚖️ Legal & Ethical Use
-
-This extension is intended for personal use only. Please:
-
-- Respect copyright and privacy laws
-- Only download audio messages sent to you
-- Use downloaded content responsibly
-- Follow Instagram's Terms of Service
-- Respect the privacy of others
-
-## 🔄 Version History
-
-### v1.0.0 (Current)
-- Initial release
-- Basic audio message detection and download
-- Popup interface with statistics
-- Support for multiple audio formats
-- Chrome extension manifest v3
-
-## 🚧 Known Limitations
-
-- Only works on Instagram web (not mobile app)
-- May not detect all audio message types immediately
-- Requires Chrome browser (Chromium-based browsers may work)
-- Instagram UI changes may temporarily affect functionality
-
-## 🔮 Future Enhancements
-
-- Batch download functionality
-- Custom download locations
-- Audio format conversion
-- Improved Instagram layout compatibility
-- Firefox extension support
-
----
-
-**Disclaimer**: This extension is not affiliated with Meta/Instagram. Use responsibly and in accordance with Instagram's Terms of Service.
+This project is released under the MIT License. See LICENSE for full terms.
